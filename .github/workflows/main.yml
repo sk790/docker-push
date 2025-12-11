@@ -50,6 +50,7 @@ jobs:
             docker run -d \
               --name my-app \
               -p 3000:3000 \
+              --env-file /home/ubuntu/myenv.env \
               --restart always \
               ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
 
