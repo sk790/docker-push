@@ -47,7 +47,7 @@ jobs:
             docker rm my-app || true
 
             # Run new container
-            docker run -d \
+            /usr/bin/docker run -d \
               --name my-app \
               -p 3000:3000 \
               --env-file /home/ubuntu/myenv.env \
