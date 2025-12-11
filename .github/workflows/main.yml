@@ -30,3 +30,29 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/my-app:${{ github.sha }}
+      - name: Deploy on Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+            # Pull latest image
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+
+            # Stop & remove old container
+            docker stop my-app || true
+            docker rm my-app || true
+
+            # Run new container
+            docker run -d \
+              --name my-app \
+              -p 3000:3000 \
+              --restart always \
+              ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+
+            # 🔥 Cleanup unused images (SAFE)
+            docker image prune -f
+
