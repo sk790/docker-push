@@ -37,20 +37,19 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+            /usr/bin/docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
 
             # Pull latest image
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+            /usr/bin/docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
 
             # Stop & remove old container
-            docker stop my-app || true
-            docker rm my-app || true
+            /usr/bin/docker stop my-app || true
+            /usr/bin/docker rm my-app || true
 
             # Run new container
             /usr/bin/docker run -d \
               --name my-app \
               -p 3000:3000 \
-              --env-file /home/ubuntu/myenv.env \
               --restart always \
               ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
 
