@@ -49,6 +49,7 @@ jobs:
             # Run new container
             /usr/bin/docker run -d \
               --name my-app \
+              --env-file /home/ubuntu/.env \
               -p 3000:3000 \
               --restart always \
               ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
